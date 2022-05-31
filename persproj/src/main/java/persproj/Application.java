@@ -1,46 +1,67 @@
 package persproj;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import persproj.jdbcPersistence.DatabaseFacade;
+import persproj.model.Department;
+import persproj.model.Person;
 
 public class Application {
 
 	public static void main(String[] args) {
 		
-		// Dies ist eine Testapplikation um zu veranschaulichen, wie wir eine Verbindung zur Datenbank herstellen.
+		// Instanzieren der Fassade
+		DatabaseFacade facade = new DatabaseFacade();
 		
-		Connection c = null;
+		// Laden der Personen aus der DB
+		List<Person> persons;
 		
-		// 1. Herstellen der Verbindung
 		try {
+			persons = facade.getAllPersons();
 			
-			c = DriverManager.getConnection(
-					"jdbc:postgresql://elmo.hostingcenter.uclv.net:5432/DB_NAME",
-					"USERNAME", "PASSWORD");
-		} catch (SQLException e) {
+			for (Person p : persons) {
+				System.out.println(p.toString());
+			}
 			
-			e.printStackTrace();
+		} catch (PersProPersistenceException e) {
+			// Ausgabe der geladenen Personen
+			System.out.println(e.getMessage());
 		}
 		
-	
+		// Erstellen einer neuen Person
+		Person person = new Person();
+		person.setfDate(LocalDate.now());
+		person.setFname("Franziska");
+		person.setLname("Zudrell");
+		person.setGender('w');
+		person.setPersNo(1234);
+		person.setSalary(BigDecimal.valueOf(50000));
+		Department d = new Department();
+		d.setDeptNo(1000);
+		person.setDepartment(d);
+		
 		try {
-			
-			// 2. Erstellen & Ausführen des Statements
-			Statement stmt = c.createStatement();
-			
-			ResultSet rs = stmt.executeQuery("select * from person");
-			
-			// 3. Durchlaufen des Resultsets & Konsolenausgabe aller Nachnamen
-			while (rs.next()) {
-				System.out.println(rs.getString("lname"));
+			// Einfügen in die Datenbank
+			facade.insertPerson(person);
+		} catch (PersProPersistenceException e) {
+			// Ausgabe der geladenen Personen
+			System.out.println(e.getMessage());
 		}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 		
+		
+		// Laden der Personen aus der DB - diesmal sollte Franziska Zudrell dabei sein
+		try {
+			persons = facade.getAllPersons();
+			
+			for (Person p : persons) {
+				System.out.println(p.toString());
+			}
+			
+		} catch (PersProPersistenceException e) {
+			// Ausgabe der geladenen Personen
+			System.out.println(e.getMessage());
+		}
+		
 	}
-		
 }

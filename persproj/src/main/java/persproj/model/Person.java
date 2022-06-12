@@ -4,6 +4,17 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table (name = "Person")
 public class Person {
 	
 	private int persNo;
@@ -16,7 +27,9 @@ public class Person {
 	private char gender;
 	private List<Project> projects;
 	
-
+	
+	@Id
+	@Column (name = "persno")
 	public int getPersNo() {
 		return persNo;
 	}
@@ -24,6 +37,7 @@ public class Person {
 		this.persNo = persNo;
 	}
 	
+	@Column (name = "fname")
 	public String getFname() {
 		return fname;
 	}
@@ -31,6 +45,7 @@ public class Person {
 		this.fname = fname;
 	}
 	
+	@Column (name = "lname")
 	public String getLname() {
 		return lname;
 	}
@@ -38,7 +53,9 @@ public class Person {
 		this.lname = lname;
 	}
 	
-
+	
+	@ManyToOne
+	@JoinColumn (name = "department")
 	public Department getDepartment() {
 		return department;
 	}
@@ -46,27 +63,31 @@ public class Person {
 		this.department = department;
 	}
 	
+	@Column (name = "salary")
 	public BigDecimal getSalary() {
 		return salary;
 	}
 	public void setSalary(BigDecimal salary) {
 		this.salary = salary;
 	}
-
+	
+	@Column (name = "fdate")
 	public LocalDate getfDate() {
 		return fDate;
 	}
 	public void setfDate(LocalDate fDate) {
 		this.fDate = fDate;
 	}
-
+	
+	@Column (name = "ldate")
 	public LocalDate getlDate() {
 		return lDate;
 	}
 	public void setlDate(LocalDate lDate) {
 		this.lDate = lDate;
 	}
-
+	
+	@Column (name = "gender")
 	public char getGender() {
 		return gender;
 	}
@@ -74,6 +95,10 @@ public class Person {
 		this.gender = gender;
 	}
 	
+	@ManyToMany
+	@JoinTable(name = "pers_proj", 
+			  joinColumns = @JoinColumn(name = "persno"), 
+			  inverseJoinColumns = @JoinColumn(name = "projno"))
 	public List<Project> getProjects() {
 		return projects;
 	}
@@ -86,6 +111,7 @@ public class Person {
 		p.getPersons().add(this);
 	}
 	
+	@Override
 	public String toString() {
 		return fname + " " + lname;
 	}

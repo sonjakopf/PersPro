@@ -3,7 +3,7 @@ package persproj.jdbcPersistence;
 import java.sql.SQLException;
 import java.util.List;
 
-import persproj.PersProPersistenceException;
+import persproj.exception.PersProPersistenceException;
 import persproj.jdbcPersistence.broker.PersonBroker;
 import persproj.model.Person;
 

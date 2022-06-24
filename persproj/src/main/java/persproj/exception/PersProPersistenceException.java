@@ -1,4 +1,4 @@
-package persproj;
+package persproj.exception;
 
 public class PersProPersistenceException extends Throwable {
 	
